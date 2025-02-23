@@ -1,0 +1,18 @@
+services:
+  wyowhisper-rocm:
+    image: CI_REGISTRY/git/wyowhisper-rocm:latest
+    container_name: wyowhisper-rocm
+    environment:
+      - MODEL=whisper-small-cv11-german
+    volumes:
+      - /opt/llm-dl:/opt/llm-dl
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    group_add:
+      - video
+      - render
+    security_opt:
+      - seccomp:unconfined
+    network_mode: host
+    restart: always
