@@ -25,9 +25,6 @@ build_latest:
       docker build --pull \
       --build-arg BUILDKIT_INLINE_CACHE=1 --output=type=image,compression=zstd \
       --cache-from $CI_REGISTRY_IMAGE:latest \
-      -t $CI_PROJECT_NAME:$CI_COMMIT_SHA \
-      -t $CI_PROJECT_NAME:latest \
-      -t $CI_PROJECT_NAME:${CI_COMMIT_SHORT_SHA} \
       -t $CI_REGISTRY_IMAGE:${CI_PIPELINE_CREATED_AT//:/.} .
     - docker tag $CI_REGISTRY_IMAGE:${CI_PIPELINE_CREATED_AT//:/.} $CI_REGISTRY_IMAGE:latest
     - docker push -a $CI_REGISTRY_IMAGE

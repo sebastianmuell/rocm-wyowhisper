@@ -29,6 +29,8 @@ muaiyadh - initial git gist for building CTranslate2 with ROCm Support in docker
 
 arlo-phoenix - fork of CTranslate2 with ROCm support, see https://github.com/arlo-phoenix/ctranslate2-rocm
 
+justinkb - patched fork of CTranslate2 with ROCm support, see https://github.com/justinkb/CTranslate2-rocm
+
 ## License
 GPLv3
 
