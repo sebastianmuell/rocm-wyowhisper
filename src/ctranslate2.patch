@@ -1,0 +1,69 @@
+diff --git a/src/cuda/helpers.h b/src/cuda/helpers.h
+index 8e7e1cc7..346559c0 100644
+--- a/src/cuda/helpers.h
++++ b/src/cuda/helpers.h
+@@ -6,6 +6,7 @@
+ #ifdef CT2_USE_HIP
+ #include <hip/hip_fp16.h>
+ #include <hip/hip_bf16.h>
++#include <thrust/iterator/counting_iterator.h>
+ #include <hip/hip_runtime.h>
+
+ #define __nv_bfloat16 __hip_bfloat16
+@@ -423,9 +424,13 @@ namespace ctranslate2 {
+     // They help define row-wise reduction where each block handles a single row.
+
+ #ifdef CT2_USE_HIP
+-  #define C10_WARP_SIZE warpSize
++    #ifdef __HIP_DEVICE_COMPILE__
++        #define C10_WARP_SIZE warpSize
++    #else
++        #define C10_WARP_SIZE 32
++    #endif
+ #else
+-  #define C10_WARP_SIZE 32
++    #define C10_WARP_SIZE 32
+ #endif
+
+     template <index_t ILP = 2>
+diff --git a/src/cuda/primitives.cu b/src/cuda/primitives.cu
+index 04add693..498fe093 100644
+--- a/src/cuda/primitives.cu
++++ b/src/cuda/primitives.cu
+@@ -18,18 +18,19 @@
+ #define CUBLAS_COMPUTE_32I HIPBLAS_COMPUTE_32I
+ #define CUDA_R_32F HIP_R_32F
+ #define CUDA_R_16BF HIP_R_16BF
+-#define cublasGemmEx hipblasGemmEx_v2
++#define cublasGemmEx hipblasGemmEx
+ #define CUDA_R_8I HIP_R_8I
+ #define CUDA_R_32I HIP_R_32I
+ #define CUBLAS_GEMM_DEFAULT_TENSOR_OP HIPBLAS_GEMM_DEFAULT
+ #define cublasSgemmStridedBatched hipblasSgemmStridedBatched
+-#define cublasGemmStridedBatchedEx hipblasGemmStridedBatchedEx_v2
++#define cublasGemmStridedBatchedEx hipblasGemmStridedBatchedEx
+ #else
+ #include <cuda_runtime.h>
+ #include <cublas_v2.h>
+ #endif
+
+ #include <thrust/device_ptr.h>
++#include <thrust/extrema.h>
+ #include "cuda/helpers.h"
+ #include "type_dispatch.h"
+
+diff --git a/src/type_dispatch.h b/src/type_dispatch.h
+index 36dd2be5..8484b53e 100644
+--- a/src/type_dispatch.h
++++ b/src/type_dispatch.h
+@@ -45,9 +45,7 @@ namespace ctranslate2 {
+   MATCH_TYPE_AND_ENUM(int16_t, DataType::INT16);
+   MATCH_TYPE_AND_ENUM(int32_t, DataType::INT32);
+   MATCH_TYPE_AND_ENUM(float16_t, DataType::FLOAT16);
+-  #ifdef CT2_USE_HIP
+   MATCH_TYPE_AND_ENUM(bfloat16_t, DataType::BFLOAT16);
+-  #endif
+ #undef MATCH_TYPE_AND_ENUM
+
+ #define TYPE_CASE(TYPE, STMTS)                  \
+ 

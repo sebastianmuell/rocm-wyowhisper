@@ -1,13 +1,5 @@
 variables:
   DOCKER_BUILDKIT: 1
-  DOCKER_IPTABLES_LEGACY: 1
-  DOCKER_HOST: "tcp://build:2375"
-  DOCKER_TLS_CERTDIR: ""
-
-services:
-  - name: docker:dind-rootless
-    alias: build
-    command: ["--tls=false", "--storage-driver=fuse-overlayfs"]
 
 image:
   name: docker:git
@@ -23,7 +15,8 @@ build_latest:
     - |
       sed -i "s#CI_REGISTRY#$CI_REGISTRY#" Dockerfile
       docker build --pull \
-      --build-arg BUILDKIT_INLINE_CACHE=1 --output=type=image,compression=zstd \
+      --build-arg BUILDKIT_INLINE_CACHE=1 --build-arg PARALLEL=4 \
+      --output=type=image,compression=zstd \
       --cache-from $CI_REGISTRY_IMAGE:latest \
       -t $CI_REGISTRY_IMAGE:${CI_PIPELINE_CREATED_AT//:/.} .
     - docker tag $CI_REGISTRY_IMAGE:${CI_PIPELINE_CREATED_AT//:/.} $CI_REGISTRY_IMAGE:latest

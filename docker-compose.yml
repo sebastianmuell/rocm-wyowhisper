@@ -3,7 +3,7 @@ services:
     image: CI_REGISTRY/git/wyowhisper-rocm:latest
     container_name: wyowhisper-rocm
     environment:
-      - MODEL=whisper-small-cv11-german
+      - MODEL=whisper-small-cv11-german-i8fl
     volumes:
       - /opt/llm-dl:/opt/llm-dl
     devices:

@@ -25,7 +25,7 @@ ROCm Team - for maintaining rocm/dev-ubuntu-24.04 on docker hub
 
 Rhasspy Team - for maintaining and developing piper and wyoming-piper
 
-muaiyadh - initial git gist for building CTranslate2 with ROCm Support in docker, see https://gist.github.com/muaiyadh/d99923375f5d35b5b08e8369705fa41a
+muaiyadh - initial github gist for building CTranslate2 with ROCm Support in docker, see https://gist.github.com/muaiyadh/d99923375f5d35b5b08e8369705fa41a
 
 arlo-phoenix - fork of CTranslate2 with ROCm support, see https://github.com/arlo-phoenix/ctranslate2-rocm
 
