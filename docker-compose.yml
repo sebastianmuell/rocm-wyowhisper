@@ -4,11 +4,17 @@ services:
     container_name: wyowhisper-rocm
     environment:
       - MODEL=whisper-small-cv11-german-i8fl
+      - COMP=int8_float16
+      - MIOPEN_FIND_MODE=2
+      - PYTORCH_TUNABLEOP_ENABLED=1
+
     volumes:
       - /opt/llm-dl:/opt/llm-dl
     devices:
       - /dev/kfd
-      - /dev/dri
+      - /dev/dri/card10
+      - /dev/dri/renderD128
+      - /dev/accel/accel0
     group_add:
       - video
       - render
